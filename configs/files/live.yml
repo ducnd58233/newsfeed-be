@@ -1,0 +1,22 @@
+my_sql: &MYSQL
+  dsn: "root:123456@tcp(mysql:3307)/engineerpro?charset=utf8mb4&parseTime=True&loc=Local"
+  defaultstringsize: 256
+  disabledatetimeprecision: true
+  dontsupportrenameindex: true
+  skipinitializewithversion: false
+redis: &REDIS
+  addr: redis:6379
+authenticate_and_post_config:
+  port: 19001
+  my_sql: *MYSQL
+  redis: *REDIS
+newsfeed_config:
+  port: 19002
+  my_sql: *MYSQL
+  redis: *REDIS
+web_config:
+  port: 19003
+  authenticate_and_post_config:
+    hosts: ["aap:19001"]
+  newsfeed:
+    hosts: ["newsfeed:19002"]
