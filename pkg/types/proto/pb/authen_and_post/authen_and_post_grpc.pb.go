@@ -7,7 +7,10 @@
 package authen_and_post
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,6 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticateAndPostClient interface {
+	CheckUserAuthentication(ctx context.Context, in *UserInfo, opts ...grpc.CallOption) (*UserResult, error)
+	CreateUser(ctx context.Context, in *UserRegisterInfo, opts ...grpc.CallOption) (*UserResult, error)
 }
 
 type authenticateAndPostClient struct {
@@ -29,10 +34,30 @@ func NewAuthenticateAndPostClient(cc grpc.ClientConnInterface) AuthenticateAndPo
 	return &authenticateAndPostClient{cc}
 }
 
+func (c *authenticateAndPostClient) CheckUserAuthentication(ctx context.Context, in *UserInfo, opts ...grpc.CallOption) (*UserResult, error) {
+	out := new(UserResult)
+	err := c.cc.Invoke(ctx, "/authen_and_post.AuthenticateAndPost/CheckUserAuthentication", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticateAndPostClient) CreateUser(ctx context.Context, in *UserRegisterInfo, opts ...grpc.CallOption) (*UserResult, error) {
+	out := new(UserResult)
+	err := c.cc.Invoke(ctx, "/authen_and_post.AuthenticateAndPost/CreateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticateAndPostServer is the server API for AuthenticateAndPost service.
 // All implementations must embed UnimplementedAuthenticateAndPostServer
 // for forward compatibility
 type AuthenticateAndPostServer interface {
+	CheckUserAuthentication(context.Context, *UserInfo) (*UserResult, error)
+	CreateUser(context.Context, *UserRegisterInfo) (*UserResult, error)
 	mustEmbedUnimplementedAuthenticateAndPostServer()
 }
 
@@ -40,6 +65,12 @@ type AuthenticateAndPostServer interface {
 type UnimplementedAuthenticateAndPostServer struct {
 }
 
+func (UnimplementedAuthenticateAndPostServer) CheckUserAuthentication(context.Context, *UserInfo) (*UserResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckUserAuthentication not implemented")
+}
+func (UnimplementedAuthenticateAndPostServer) CreateUser(context.Context, *UserRegisterInfo) (*UserResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
 func (UnimplementedAuthenticateAndPostServer) mustEmbedUnimplementedAuthenticateAndPostServer() {}
 
 // UnsafeAuthenticateAndPostServer may be embedded to opt out of forward compatibility for this service.
@@ -53,13 +84,58 @@ func RegisterAuthenticateAndPostServer(s grpc.ServiceRegistrar, srv Authenticate
 	s.RegisterService(&AuthenticateAndPost_ServiceDesc, srv)
 }
 
+func _AuthenticateAndPost_CheckUserAuthentication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticateAndPostServer).CheckUserAuthentication(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authen_and_post.AuthenticateAndPost/CheckUserAuthentication",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticateAndPostServer).CheckUserAuthentication(ctx, req.(*UserInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticateAndPost_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRegisterInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticateAndPostServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authen_and_post.AuthenticateAndPost/CreateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticateAndPostServer).CreateUser(ctx, req.(*UserRegisterInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticateAndPost_ServiceDesc is the grpc.ServiceDesc for AuthenticateAndPost service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthenticateAndPost_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "authen_and_post.AuthenticateAndPost",
 	HandlerType: (*AuthenticateAndPostServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "authen_and_post.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CheckUserAuthentication",
+			Handler:    _AuthenticateAndPost_CheckUserAuthentication_Handler,
+		},
+		{
+			MethodName: "CreateUser",
+			Handler:    _AuthenticateAndPost_CreateUser_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "authen_and_post.proto",
 }

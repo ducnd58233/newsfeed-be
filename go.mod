@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/go-redis/redis/v8 v8.11.5
+	golang.org/x/crypto v0.10.0
 	google.golang.org/grpc v1.56.0
 	gorm.io/gorm v1.25.1
 )
@@ -31,7 +32,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.10.0 // indirect
 	golang.org/x/net v0.11.0 // indirect
 	golang.org/x/sys v0.9.0 // indirect
 	golang.org/x/text v0.10.0 // indirect

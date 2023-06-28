@@ -2,18 +2,17 @@ USE engineerpro;
 
 CREATE TABLE `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `hashed_password` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(50) NOT NULL,
   `salt` VARCHAR(20) NOT NULL,
   `first_name` VARCHAR(50) NOT NULL,
   `last_name` VARCHAR(50) NOT NULL,
-  `date_of_birth` TIMESTAMP NOT NULL,
+  -- `date_of_birth` TIMESTAMP NOT NULL,
   `email` VARCHAR(50) NOT NULL,
-  `user_name` VARCHAR(50) NOT NULL,
   `status` BOOL NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` TIMESTAMP NULL,
-  INDEX idx_username (user_name)
+  INDEX idx_username (email)
 );
 
 CREATE TABLE `posts` (
